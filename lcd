@@ -1,0 +1,57 @@
+#!/bin/bash
+LANG=C /usr/bin/gawk '
+function sleep(s) {
+  fflush();
+  system("sleep " s);
+}
+
+function setCursor(x, y) {
+  printf("%c%c%c%c", 0x9F, 0xFF, x, y) > DEV;
+  sleep(0.03); # 30 ms
+}
+
+function LCDprint(string) {
+  i=1;
+  while (i <= length(string)) {
+    printf("%c%s", 0xFE, substr(string, i++, 1)) > DEV;
+  }
+}
+
+BEGIN {
+DEV="/dev/ttyAMA0";
+}
+
+{
+  if (NR > 2) nextfile;
+  setCursor(0,(NR-1));
+  LCDprint(substr($0 "                 ",1,16));
+}
+  
+END {
+  sleep(0.5); # 500 ms
+}'
+
+### LCD Commands ###
+# SLCD_CONTROL_HEADER	0x9F
+# SLCD_CHAR_HEADER	0xFE
+# SLCD_CURSOR_HEADER	0xFF
+# SLCD_CURSOR_ACK	0x5A
+# SLCD_RETURN_HOME	0x61
+# SLCD_DISPLAY_OFF	0x63
+# SLCD_DISPLAY_ON	0x64
+# SLCD_CLEAR_DISPLAY	0x65
+# SLCD_CURSOR_OFF	0x66
+# SLCD_CURSOR_ON	0x67
+# SLCD_BLINK_OFF	0x68
+# SLCD_BLINK_ON		0x69
+# SLCD_SCROLL_LEFT	0x6C
+# SLCD_SCROLL_RIGHT	0x72
+# SLCD_NO_AUTO_SCROLL	0x6A
+# SLCD_AUTO_SCROLL	0x6D
+# SLCD_LEFT_TO_RIGHT	0x70
+# SLCD_RIGHT_TO_LEFT	0x71
+### Firmware 1.0b and above ###
+# SLCD_BACKLIGHT_ON	0x81
+# SLCD_BACKLIGHT_OFF	0x80
+# SLCD_POWER_ON    	0x83
+# SLCD_POWER_OFF  	0x82
