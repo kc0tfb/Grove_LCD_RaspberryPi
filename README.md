@@ -11,22 +11,22 @@ module).
 First, edit /boot/cmdline.txt to remove any references to /dev/ttyAMA0.  My
 old one looked like this:
 
-  dwc_otg.lpm_enable=0 console=ttyAMA0,115200 kgdboc=ttyAMA0,115200 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline rootwait
+	dwc_otg.lpm_enable=0 console=ttyAMA0,115200 kgdboc=ttyAMA0,115200 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline rootwait
 
 Now it looks like this:
 
-  dwc_otg.lpm_enable=0 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline rootwait
+	dwc_otg.lpm_enable=0 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline rootwait
 
 Next, edit /etc/inittab and comment out the line that runs getty on
 /dev/ttyAMA0, if any.
 
 The examples included here use GNU awk; so install it:
 
-  sudo apt-get install gawk
+	sudo apt-get install gawk
 
 Last, add the 'pi' user to the 'dialout' group so it has access to the UART:
 
-  sudo usermod -aG dialout pi
+	sudo usermod -aG dialout pi
 
 Power off your Pi.  It's time to wire up the display!
 
@@ -42,11 +42,11 @@ come on.
 You should be able to send messages to the display by piping text to
 'lcd' like this:
 
-  (date; uname -r) | ./lcd
+	(date; uname -r) | ./lcd
 
 or 
 
-  echo -e "This is a\ntest..." | ./lcd
+	echo -e "This is a\ntest..." | ./lcd
 
 You can see all the possible characters on the display with 'chartest' or
 turn the display off with 'lcd-off'.
