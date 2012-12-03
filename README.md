@@ -1,6 +1,8 @@
 Grove SerialLCD and Raspberry Pi
 ================================
 
+See http://www.seeedstudio.com/depot/grove-serial-lcd-p-773.html
+
 By default, most distributions of Linux for the Raspberry Pi use
 /dev/ttyAMA0 (the UART) as a console.  You'll have to make a few changes so
 that you can use it for other purposes (like attaching your SerialLCD
