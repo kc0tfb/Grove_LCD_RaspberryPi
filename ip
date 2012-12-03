@@ -1,0 +1,34 @@
+#!/bin/bash
+LANG=C /usr/bin/gawk '
+function sleep(s) {
+  fflush();
+  system("sleep " s);
+}
+
+function setCursor(x, y) {
+  printf("%c%c%c%c", 0x9F, 0xFF, x, y) > DEV;
+  sleep(0.03); # 30 ms
+}
+
+function LCDprint(string) {
+  i=1;
+  while (i <= length(string)) {
+    printf("%c%s", 0xFE, substr(string, i++, 1)) > DEV;
+  }
+}
+
+function GetIP() {
+  while(("/sbin/ifconfig eth0" | getline)>0) {
+    if (index($0,"inet addr:")>0) {
+      sub("addr:","",$2);
+      return($2);
+    }
+  }
+}
+
+BEGIN {
+  DEV="/dev/ttyAMA0";
+  setCursor(0,1);
+  LCDprint(GetIP() "                ");
+  sleep(0.1);
+}'
